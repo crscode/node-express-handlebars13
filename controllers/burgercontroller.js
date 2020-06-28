@@ -1,62 +1,56 @@
-let express = require("express");
-
-let router = express.Router();
+const express = require("express");
+const router = express.Router(); // Call an Instance of the express.Router(), apply Routes to it, and then Tell the Application to use those Routes
 
 // Import the model (burger.js) to use its database functions.
-let burger = require("../models/burger.js");
+const burger = require("../models/burgerModel.js");
+
+/////////////////////////////////////////////// /* Get Routes */ //////////////////////////////////////////////////////////
 
 // Create all our routes and set up logic within those routes where required.
 router.get("/", function(req, res) {
-  burger.all(function(data) {
-   // let hbsObject = {
-  //    burgers: data
-  //  };
-    console.log(data);
-    res.render("index", {burgers:data
-
+    console.log("Route Path Hit");
+    burger.selectAll((data) => {
+      handlebarsObject = {
+        burger: data
+      };
+      console.log("Diplayed Burgers");
+      res.render("index", handlebarsObject);
     });
+
+});
+
+/////////////////////////////////////////////// /* Post Routes */ //////////////////////////////////////////////////////////
+
+router.post("/api/burger", function(req, res) {
+  console.log("burger Route Hit");
+  burger.insertOne(["burger_name","devoured"], [req.body["burger_name"], req.body.devoured], (result)=>{
+    // Send back the ID of the new quote
+    console.log(result);
+    res.json(result);
   });
 });
 
-router.post("/api/burgers", function(req, res) {
-  burger.create (
-    req.body.burger_name, 
-   function(result) {
-    // Send back the ID of the new burger
-   console.log(result);
-   res.redirect("/");
+router.put("/api/burger/:id", function(req, res) {
+
+  let burgerID = req.params.id
+  let condition = "id = " + burgerID ;
+
+  console.log("burger Route Hit. ID is "+ burgerID);
+  console.log("Dev is " + req.body.devoured);
+
+  burger.updateOne(["devoured"], [req.body.devoured], condition, (result)=>{
+    // Send back the ID of the new quote
+    console.log("Executing First Declared CallBack");
+    res.json(result);
   });
 });
 
-router.put("/api/burgers/:id", function(req, res) {
-  let condition = "id = " + req.params.id;
 
-  console.log("condition", condition);
 
-  console.log(req.body.devoured)
 
-  burger.update(req.body, condition, function(result) {
-    if (result.changedRows == 0) {
-      // If no rows were changed, then the ID must not exist, so 404
-      return res.status(404).end();
-    } else {
-      res.status(200).end();
-    }
-  });
-});
 
-router.delete("/api/burgers/:id", function(req, res) {
-  let condition = "id = " + req.params.id;
 
-  burger.delete(condition, function(result) {
-    if (result.affectedRows == 0) {
-      // If no rows were changed, then the ID must not exist, so 404
-      return res.status(404).end();
-    } else {
-      res.status(200).end();
-    }
-  });
-});
+
 
 // Export routes for server.js to use.
 module.exports = router;
