@@ -1,57 +1,42 @@
-<h1>Burgers!</h1>
+<div class="logo">
+    <center><img src="/assets/images/burger.jpg" alt="Logo"></center>
+</div>
 
-<h2>Burgers that are not eaten!</h2>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <p class="text">Add, EAT , CREATE  a BURGER</p>
+        <form class="form">
+            <div class="form-group">
+                <input type="text" placeholder="Burger name" id="burger-input" name="name">
+            </div>
+            <button id="submit-btn" type="submit">ADD BURGER</button>
+        </form>
+    </div>
+</div>
 
-<ul>
-  {{#each burgers}}
-  {{#unless this.devoured}}
+<div class="row">
 
-  <li>{{this.id}},{{this.burger_name}}</li>
+    <div class="col-md-5 eat">
+        <h2>Burgers to eat!</h2>
+        <ul>
+            {{#each burgers}} {{#unless devoured}} {{> burgers/burger-block devour=true}} {{/unless}} {{/each}}
+        </ul>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5 done">
+        <h2>Already eaten!</h2>
+        <ul>
+            {{#each burgers}} {{#if devoured}}
+            <div class="eat-burger">
+                <span class="label">#{{this.id}}</span>
+                <span class="label">{{this.burger_name}}</span>
+            </div>
+            {{/if}} {{/each}}
+        </ul>
+    </div>
+    <div class="col-md-1"></div>
+</div>
 
-
- 
-    <button class='eatBurger' data-id="{{this.id}}">Devour Burger</button>
-    
-    
-    </form>
-
-
-
-
-  {{/unless }}
-  {{/each}}
-</ul>
-
-<h2>Burgers that are eaten!</h2>
-
-
-<ul>
-  {{#each burgers}}
-  {{#if devoured}}
-
-
-  <li>{{this.id}} {{this.burger_name}}</li>
-
-
-  {{/if}}
-  {{/each}}
-</ul>
-
-
-
-<h2>Add-a-Burger</h2>
-<form class="create-form" action="/api/burgers" method="POST">
-
-  <div class="form-group">
-    <label for="ca">Name Your Burger:</label>
-    <input type="text" id="ca" name="burger_name">
-  </div>
-
-  {{!-- <div class="form-group">
-    <label for="devoured">Hungry</label><br>
-    <input type="radio" name="devoured" value="1" checked> devoured!<br>
-    <input type="radio" name="devoured" value="0"> False
-  </div> --}}
-
-  <button type="submit">Add Burger</button>
-</form>
+<div id ="footerSection">
+  <center><p>Hosted  By CRSCODE</p></center>
+</div>
